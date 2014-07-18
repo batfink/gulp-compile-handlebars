@@ -24,7 +24,7 @@ module.exports = function (data, opts) {
 	if(options.batch){
 		// Allow single string
 		if(typeof options.batch === 'string') options.batch = [options.batch];
-			
+
 		options.batch.forEach(function (b) {
 			var filenames = fs.readdirSync(b);
 
@@ -34,7 +34,7 @@ module.exports = function (data, opts) {
 				// Don't allow hidden files
 				if(!name.length) return;
 				var template = fs.readFileSync(b + '/' + filename, 'utf8');
-				Handlebars.registerPartial(b.split('/').pop() + '/' + name, template);
+				Handlebars.registerPartial(name, template);
 			});
 		});
 	}
@@ -51,7 +51,7 @@ module.exports = function (data, opts) {
 				partial = match[1];
 				//Only register an empty partial if the partial has not already been registered
 				if(!Handlebars.partials.hasOwnProperty(partial)){
-					Handlebars.registerPartial(partial, gutil.noop);	
+					Handlebars.registerPartial(partial, gutil.noop);
 				}
 			}
 		}
@@ -72,7 +72,7 @@ module.exports = function (data, opts) {
 		try {
 			var fileContents = file.contents.toString();
 			if(options.ignorePartials){
-				mockPartials(fileContents);		
+				mockPartials(fileContents);
 			}
 			var template = Handlebars.compile(fileContents);
 			file.contents = new Buffer(template(data));
